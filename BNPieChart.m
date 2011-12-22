@@ -41,8 +41,7 @@
 @synthesize slicePortions, colors;
 
 + (BNPieChart *)pieChartSampleWithFrame:(CGRect)frame {
-	BNPieChart *chart = [[[BNPieChart alloc]
-                        initWithFrame:frame] autorelease];
+	BNPieChart *chart = [[BNPieChart alloc] initWithFrame:frame];
 	[chart addSlicePortion:0.1 withName:@"Orange"];
 	[chart addSlicePortion:0.2 withName:@"Fandango"];
 	[chart addSlicePortion:0.1 withName:@"Blue"];
@@ -69,13 +68,7 @@
 }
 
 - (void)dealloc {
-	[slicePortions release];
-	[slicePointsIn01 release];
-	[sliceNames release];
-	[nameLabels release];
 	CFRelease(colorspace);
-  self.colors = nil;
-  [super dealloc];
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -270,7 +263,6 @@
 	label.backgroundColor = [UIColor clearColor];
 	[nameLabels addObject:label];
 	[self addSubview:label];
-	[label release];
 	
 	// Reposition the labels and/or resize the radius as needed to fit.
 	float labelDist = [self approxDistFromCenter:label.frame];

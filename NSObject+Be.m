@@ -33,8 +33,6 @@
   [anInvocation invoke];
   id object;
   [anInvocation getReturnValue:(void *)&object];
-  [object autorelease];
-  [self release];
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
@@ -53,11 +51,11 @@
 }
 
 + (id)beInit {
-  return [[[self class] new] autorelease];
+  return [[self class] new];
 }
 
 - (id)beCopy {
-  return [[self copy] autorelease];
+  return [self copy];
 }
 
 @end

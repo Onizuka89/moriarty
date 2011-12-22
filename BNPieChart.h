@@ -60,4 +60,6 @@
 // Creates a sample pie chart in the given frame.
 + (BNPieChart *)pieChartSampleWithFrame:(CGRect)frame;
 
+float dist(float x1, float y1, float x2, float y2);
+
 @end
