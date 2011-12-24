@@ -56,6 +56,7 @@
 // Adds a slice with the given portion (fraction in the range 0.0-1.0),
 // and name.  The name may be nil.
 - (void)addSlicePortion:(float)slicePortion withName:(NSString *)name;
+- (void)reset;
 
 // Creates a sample pie chart in the given frame.
 + (BNPieChart *)pieChartSampleWithFrame:(CGRect)frame;
