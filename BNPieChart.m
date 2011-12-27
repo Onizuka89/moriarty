@@ -38,7 +38,7 @@
 
 @implementation BNPieChart
 
-@synthesize slicePortions, colors;
+@synthesize slicePortions, colors, shouldDrawGlare;
 
 + (BNPieChart *)pieChartSampleWithFrame:(CGRect)frame {
 	BNPieChart *chart = [[BNPieChart alloc] initWithFrame:frame];
@@ -118,24 +118,26 @@
   CGContextRestoreGState(context);
 	
 	// Draw the glare.
-	CGContextBeginPath(context);
-	CGContextAddArc(context, centerX, centerY, radius, 0, 2*M_PI, 1);
-	CGContextClip(context);
-	CGContextBeginPath(context);
-	CGContextAddArc(context, centerX - radius * 0.5, centerY - radius * 0.5,
-					radius * 1.1, 0, 2*M_PI, 1);
-	CGContextClip(context);
-	
-	// Set up the gradient for the glare.
-	size_t num_locations = 2;
-	CGFloat locations[2] = {0.0, 1.0};
-	CGFloat components[8] = {1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.45};
-	CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components,
-																 locations, num_locations);
-	CGContextDrawLinearGradient(context, gradient,
-								CGPointMake(centerX + radius * 0.6, centerY + radius * 0.6),
-								CGPointMake(centerX - radius, centerY - radius), 0);
-	CGGradientRelease(gradient);
+    if (shouldDrawGlare) {
+        CGContextBeginPath(context);
+        CGContextAddArc(context, centerX, centerY, radius, 0, 2*M_PI, 1);
+        CGContextClip(context);
+        CGContextBeginPath(context);
+        CGContextAddArc(context, centerX - radius * 0.5, centerY - radius * 0.5,
+                        radius * 1.1, 0, 2*M_PI, 1);
+        CGContextClip(context);
+        
+        // Set up the gradient for the glare.
+        size_t num_locations = 2;
+        CGFloat locations[2] = {0.0, 1.0};
+        CGFloat components[8] = {1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.45};
+        CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components,
+                                                                     locations, num_locations);
+        CGContextDrawLinearGradient(context, gradient,
+                                    CGPointMake(centerX + radius * 0.6, centerY + radius * 0.6),
+                                    CGPointMake(centerX - radius, centerY - radius), 0);
+        CGGradientRelease(gradient);
+    }
 }
 
 
@@ -151,6 +153,7 @@
   sliceNames = [NSMutableArray new];
   nameLabels = [NSMutableArray new];
   colorspace = CGColorSpaceCreateDeviceRGB();    
+    shouldDrawGlare = YES;
 }
 
 - (void)drawSlice:(int)index inContext:(CGContextRef)context {
@@ -182,17 +185,18 @@
 	CGGradientRelease(gradient);
 	CGContextRestoreGState(context);
 	
-	// Draw the slice outline.
-	CGContextSaveGState(context);
-	CGContextAddPath(context, path);
-	CGContextClip(context);
-	CGContextAddPath(context, path);
-	CGContextSetLineWidth(context, 0.5);
-	UIColor* darken = [UIColor colorWithWhite:0.0 alpha:0.2];
-	CGContextSetStrokeColorWithColor(context, darken.CGColor);
-	CGContextStrokePath(context);
-	CGContextRestoreGState(context);
-	
+	// Draw the slice outline unless only one slice
+    if (slicePortions.count > 1) {
+        CGContextSaveGState(context);
+        CGContextAddPath(context, path);
+        CGContextClip(context);
+        CGContextAddPath(context, path);
+        CGContextSetLineWidth(context, 0.5);
+        UIColor* darken = [UIColor colorWithWhite:0.0 alpha:0.2];
+        CGContextSetStrokeColorWithColor(context, darken.CGColor);
+        CGContextStrokePath(context);
+        CGContextRestoreGState(context);
+    }	
 	CGPathRelease(path);
 }
 
@@ -335,7 +339,7 @@ float dist(float x1, float y1, float x2, float y2) {
 - (void)reset {
     [sliceNames removeAllObjects];
     for (id name in nameLabels) {
-        if (name == NULL) {
+        if (name != [NSNull null]) {
             [name removeFromSuperview];
         }
     }

@@ -52,6 +52,7 @@
 
 @property (nonatomic, retain) NSMutableArray* slicePortions;
 @property (nonatomic, retain) NSArray *colors;
+@property BOOL shouldDrawGlare;
 
 // Adds a slice with the given portion (fraction in the range 0.0-1.0),
 // and name.  The name may be nil.
