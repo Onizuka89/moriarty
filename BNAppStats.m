@@ -70,7 +70,7 @@ static BOOL pendingOpenNote = NO;
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
                                                        NSUserDomainMask, YES);
 	NSString *documentsDirectory = [paths objectAtIndex:0];
-	path = [[documentsDirectory stringByAppendingPathComponent:kFilename] retain];
+	path = [documentsDirectory stringByAppendingPathComponent:kFilename];
 #endif
 	return path;
 }

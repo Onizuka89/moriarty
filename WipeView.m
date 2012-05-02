@@ -67,8 +67,6 @@
 }
 
 - (void)setImage:(UIImage *)newImage {
-  [newImage retain];
-  [image release];
   image = newImage;
   
   self.frameSize = image.size;

@@ -57,7 +57,6 @@ static float max(float a, float b) {
 - (void)dealloc {
   self.color = nil;
   self.shadowColor = nil;
-  [super dealloc];
 }
 
 + (LineView *)lineFromPoint:(CGPoint)a toPoint:(CGPoint)b {
@@ -83,8 +82,7 @@ static float max(float a, float b) {
 
 - (void)setColor:(UIColor *)newColor {
   if (color == newColor) return;
-  [color release];
-  color = [newColor retain];
+  color = newColor;
   [self setNeedsDisplay];
 }
 

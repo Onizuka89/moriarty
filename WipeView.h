@@ -53,7 +53,7 @@
 }
 
 @property (nonatomic, retain) UIImage *image;
-@property (nonatomic, assign) id<WipeViewDelegate> delegate;
+@property (nonatomic, strong) id<WipeViewDelegate> delegate;
 @property (nonatomic) NSTimeInterval duration;
 
 - (void)wipeOutInDirection:(CGPoint)direction;
